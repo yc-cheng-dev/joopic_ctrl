@@ -1,6 +1,7 @@
 # joopic_ctrl
 
 From com.joobot.controller.CambuddyController:
+```java
 public class CamBuddyController implements ActionCtrlr, ConfigCtrlr, PhotoAccessCtrlr, StateCtrlr, Controller {
     private static final int BATTERY_PERIOD = 60000;
     private static final int SOCKET_CLOSE = 0;
@@ -21,3 +22,4 @@ public class CamBuddyController implements ActionCtrlr, ConfigCtrlr, PhotoAccess
     private MyLogger log = MyLogger.getLogger(CamBuddyController.class.getSimpleName());
     private boolean mUseJavaWebSocket = false;
     private Handler mHandler = new Handler();
+```
