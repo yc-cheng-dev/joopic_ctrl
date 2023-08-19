@@ -24,6 +24,15 @@ public class CamBuddyController implements ActionCtrlr, ConfigCtrlr, PhotoAccess
     private Handler mHandler = new Handler();
 ```
 ```java
+    public void init() {
+        if (this.mUseJavaWebSocket) {
+            this.mWScoketClient = new MyWebSocketClient(URI.create(COMMON_URL));
+        } else {
+            this.mWSConnection = new WebSocketConnection();
+        }
+    }
+```
+```java
 private String mapToJsonString(Map<String, Object> obj) {
         try {
             StringBuilder builder = new StringBuilder().append("{");
