@@ -199,3 +199,49 @@ private class WebsocketWriteThread implements Runnable {
         }
     }
 ```
+
+```java
+public void run() {
+        int readBytes;
+        try {
+            if (this.socket == null) {
+                this.socket = new Socket(this.proxy);
+            } else if (this.socket.isClosed()) {
+                throw new IOException();
+            }
+            this.socket.setTcpNoDelay(true);
+            this.socket.setKeepAlive(true);
+            this.socket.setOOBInline(true);
+            this.socket.setSendBufferSize(1024);
+            this.socket.setReceiveBufferSize(1024);
+            if (!this.socket.isBound()) {
+                this.socket.connect(new InetSocketAddress(this.uri.getHost(), getPort()), this.connectTimeout);
+            }
+            this.istream = this.socket.getInputStream();
+            this.ostream = this.socket.getOutputStream();
+            sendHandshake();
+            this.writeThread = new Thread(new WebsocketWriteThread());
+            this.writeThread.start();
+            byte[] rawbuffer = new byte[WebSocketImpl.RCVBUF];
+            while (!isClosed() && (readBytes = this.istream.read(rawbuffer)) != -1) {
+                try {
+                    Log.i("xsm", "............................................... read message.....begin");
+                    this.engine.decode(ByteBuffer.wrap(rawbuffer, 0, readBytes));
+                    Log.i("xsm", "............................................... read message.....end");
+                } catch (IOException e) {
+                    this.engine.eot();
+                } catch (RuntimeException e2) {
+                    onError(e2);
+                    this.engine.closeConnection(1006, e2.getMessage());
+                }
+            }
+            this.engine.eot();
+            if (!$assertionsDisabled && !this.socket.isClosed()) {
+                throw new AssertionError();
+            }
+        } catch (Exception e3) {
+            onWebsocketError(this.engine, e3);
+            this.engine.closeConnection(-1, e3.getMessage());
+        }
+    }
+```
