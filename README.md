@@ -162,3 +162,31 @@ private String newHandshakeKey() {
         return Base64.encodeToString(ba, 2);
     }
 ```
+
+Concerin the background handlers, here is some information:
+```java
+private class WebsocketWriteThread implements Runnable {
+        private WebsocketWriteThread() {
+        }
+
+        @Override // java.lang.Runnable
+        public void run() {
+            Thread.currentThread().setName("WebsocketWriteThread");
+            while (!Thread.interrupted()) {
+                try {
+                    ByteBuffer buffer = WebSocketClient.this.engine.outQueue.take();
+                    Log.i("xsm", "##########################write.begin.....................");
+                    WebSocketClient.this.ostream.write(buffer.array(), 0, buffer.limit());
+                    Log.i("xsm", "..........................write.end begin flush #####################");
+                    WebSocketClient.this.ostream.flush();
+                    Log.i("xsm", "..........................write.end end flush #####################");
+                } catch (IOException e) {
+                    WebSocketClient.this.engine.eot();
+                    return;
+                } catch (InterruptedException e2) {
+                    return;
+                }
+            }
+        }
+    }
+```
