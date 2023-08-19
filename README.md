@@ -1,4 +1,60 @@
-# joopic_ctrl
+# joopic_ctrl: SW control package for Joopic Cambuddy Pro
+
+The offical App is no longer working. Thus I'd like to find the way to control the device through some socket programming. So far the device can be reached through websocket and get the device state. However, when I tried to change the mode or send commands (e.g. shoot), it retured "genuine check failure".
+
+Here is the pythen code example:
+```python
+from websocket import create_connection
+from random import randbytes
+import base64
+
+rb = randbytes(16)
+base64_bytes = myObj = base64.b64encode(rb).decode('ascii')
+
+headers = {
+           'Host': '192.168.8.1:8090',           
+           'Connection': 'Upgrade',
+           'Sec-WebSocket-Key': base64_bytes,       
+            # 'Sec-WebSocket-Protocol': '',
+            # 'Upgrade': 'webSocket',
+            # 'Host': 'localhost',
+           'Sec-WebSocket-Version': '13',
+           }
+
+ws = create_connection("ws://192.168.8.1:8090/dslrcontrol", header=headers)
+print(f"Feedback of connection: {ws.recv()}")
+
+ws_cmd = "{\"id\":\"state\"}"
+print(f"Sending WS command: {ws_cmd}")
+ws.send(ws_cmd)
+print(ws.recv())
+
+ws_cmd = "{\"id\":\"getinitstate\"}"
+print(f"Sending WS command: {ws_cmd}")
+ws.send(ws_cmd)
+print(ws.recv())
+
+# Not working and returning "genuine check failure"
+# ws_cmd = "{\"id\":\"pushback\"}"
+# print(f"Sending WS command: {ws_cmd}")
+# ws.send(ws_cmd)
+# print(ws.recv())
+
+# Not working and returning "genuine check failure"
+# ws_cmd = "{\"id\":\"pushback\",\"value\":\"on\"}"
+# print(f"Sending WS command: {ws_cmd}")
+# ws.send(ws_cmd)
+# print(ws.recv())
+
+# Not working and returning "genuine check failure"
+ws_cmd = "{\"id\":\"shoot\",\"review\":\"off\",\"delaytime\":\"0\"}"
+print(f"Sending WS command: {ws_cmd}")
+ws.send(ws_cmd)
+print(ws.recv())
+
+ws.close()
+```
+
 
 From com.joobot.controller.CambuddyController, the possible downward control flow may consist the following parts:
 ```java
