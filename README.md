@@ -118,3 +118,47 @@ public class Cmds {
     public static final String CMD_ID_ZOOM = "zoom";
 }
 ```
+
+Futhermore, here is the handshake part:
+```java
+private void sendClientHandshake(WebSocketMessage.ClientHandshake message) throws IOException {
+        String path;
+        if (message.mQuery != null) {
+            path = String.valueOf(message.mPath) + "?" + message.mQuery;
+        } else {
+            path = message.mPath;
+        }
+        this.mBuffer.write("GET " + path + " HTTP/1.1");
+        this.mBuffer.crlf();
+        this.mBuffer.write("Host: " + message.mHost);
+        this.mBuffer.crlf();
+        this.mBuffer.write("Upgrade: WebSocket");
+        this.mBuffer.crlf();
+        this.mBuffer.write("Connection: Upgrade");
+        this.mBuffer.crlf();
+        this.mBuffer.write("Sec-WebSocket-Key: " + newHandshakeKey());
+        this.mBuffer.crlf();
+        if (message.mOrigin != null && !message.mOrigin.equals("")) {
+            this.mBuffer.write("Origin: " + message.mOrigin);
+            this.mBuffer.crlf();
+        }
+        if (message.mSubprotocols != null && message.mSubprotocols.length > 0) {
+            this.mBuffer.write("Sec-WebSocket-Protocol: ");
+            for (int i = 0; i < message.mSubprotocols.length; i++) {
+                this.mBuffer.write(message.mSubprotocols[i]);
+                this.mBuffer.write(", ");
+            }
+            this.mBuffer.crlf();
+        }
+        this.mBuffer.write("Sec-WebSocket-Version: 13");
+        this.mBuffer.crlf();
+        this.mBuffer.crlf();
+    }
+```
+```java
+private String newHandshakeKey() {
+        byte[] ba = new byte[16];
+        this.mRng.nextBytes(ba);
+        return Base64.encodeToString(ba, 2);
+    }
+```
