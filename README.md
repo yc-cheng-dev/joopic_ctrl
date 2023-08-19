@@ -1,8 +1,8 @@
 # joopic_ctrl: SW control package for Joopic Cambuddy Pro
 
-The offical App is no longer working. Thus I'd like to find the way to control the device through some socket programming. So far the device can be reached through websocket and get the device state. However, when I tried to change the mode or send commands (e.g. shoot), it retured "genuine check failure".
+The official App is no longer working. Thus I'd like to find a way to control the device through some socket programming. So far the device can be reached through websocket and get the device state. However, when I tried to change the mode or send commands (e.g. shoot), it returned "genuine check failure".
 
-Here is the pythen code example:
+Here is the Python code example:
 ```python
 from websocket import create_connection
 from random import randbytes
