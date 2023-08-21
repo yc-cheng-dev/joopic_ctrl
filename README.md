@@ -184,7 +184,7 @@ public class Cmds {
 }
 ```
 
-Futhermore, here is the handshake part:
+Furthermore, here is the handshake part:
 ```java
 private void sendClientHandshake(WebSocketMessage.ClientHandshake message) throws IOException {
         String path;
@@ -228,7 +228,7 @@ private String newHandshakeKey() {
     }
 ```
 
-Concerin the background handlers, here is some information:
+Concerning the background handlers, here is some information:
 ```java
 private class WebsocketWriteThread implements Runnable {
         private WebsocketWriteThread() {
