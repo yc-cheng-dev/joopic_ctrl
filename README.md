@@ -9,7 +9,7 @@ from random import randbytes
 import base64
 
 rb = randbytes(16)
-base64_bytes = myObj = base64.b64encode(rb).decode('ascii')
+base64_bytes = base64.b64encode(rb).decode('ascii')
 
 headers = {
            'Host': '192.168.8.1:8090',           
